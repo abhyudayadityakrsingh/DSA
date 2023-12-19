@@ -1,0 +1,36 @@
+//Leetcode question - Construct a tree from inorder and postorder traversal
+class Solution {
+public:
+  void createMapping(vector <int> in , map <int,int> &nodeToIndex){
+      for(int i = 0 ; i < in.size() ; i ++ ){
+          nodeToIndex[in[i]] = i ;
+      }
+  }
+    TreeNode* solve(vector <int> in , vector <int> p , int &index , int inorderStart , int inorderEnd , map <int,int> nodeToIndex ){
+        //base case
+      
+        if(index < 0 ||  inorderStart > inorderEnd){
+            return NULL ;
+        }
+
+        int element = p[index--] ;
+        TreeNode* root = new TreeNode(element) ;
+        int pos = nodeToIndex[element] ;
+        
+        root->right= solve(in,p,index ,pos+1,inorderEnd ,nodeToIndex) ;
+        root->left = solve(in,p,index,inorderStart ,pos-1 ,nodeToIndex);
+        
+        return root ;
+    }
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+         int n = postorder.size() ;
+        int postOrderIndex = n-1 ;
+
+        map <int,int> nodeToIndex ;
+        createMapping(inorder , nodeToIndex) ;
+       
+        TreeNode* ans = solve(inorder,postorder,postOrderIndex,0,n-1 , nodeToIndex);
+        return ans ;
+        
+    }
+};
