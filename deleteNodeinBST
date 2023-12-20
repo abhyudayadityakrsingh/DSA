@@ -1,0 +1,59 @@
+class Solution {
+public:
+    TreeNode* findsucc(TreeNode* root){
+      
+        TreeNode* ans =root;
+        if(root == NULL){
+            return NULL ;
+        }
+        ans = ans->left ;
+        while(ans != NULL && ans->right != NULL){
+            ans = ans->right ;
+        }
+        return ans;
+    }
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        //base case
+        if(root == NULL){
+            return NULL ;
+        }
+
+       if(root->val == key){
+            //0-child node to be deleted
+          if(root->left == NULL && root->right == NULL){
+            delete root ;
+            return NULL ;
+          }
+
+          //1-child node
+          //left child
+          if(root->left != NULL && root->right == NULL){
+              TreeNode* temp = root -> left ;
+              delete root ;
+              return temp ;
+          }
+          //Right child
+          if(root->left == NULL && root->right != NULL){
+              TreeNode* temp = root -> right ;
+              delete root ;
+              return temp ;
+          }
+
+          //2-child node is to be deleted
+           if(root->left != NULL && root->right != NULL){
+               int mini = findsucc(root)->val ;
+               root->val = mini ;
+               root->left  = deleteNode(root->left,mini);
+              
+                       }
+       }
+
+       else if(root->val > key){
+           root->left = deleteNode(root->left,key) ;
+       }
+       else{
+           root->right = deleteNode(root->right,key) ;
+       }
+       return root; 
+    }
+};
